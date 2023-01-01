@@ -24,8 +24,11 @@ interface IApiResponse {
 
 export default function Home() {
     const [chosenSection, setChosenSection] = useState("");
-    const [data, setData] = useState<IApiResponse>();
     const [resultsPerPage, setResultsPerPage] = useState(20);
+    const [data, setData] = useState<IApiResponse>();
+    const [selectedData, setSelectedData] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pages, setPages] = useState(0);
 
     const handleClick = (sectionName: string) => {
         setChosenSection(sectionName);
@@ -38,6 +41,7 @@ export default function Home() {
     const fetchData = (url: string) => {
         axios.get(`${url}`).then((response) => {
             console.log(response.data);
+            setPages(Math.ceil(response.data.count / resultsPerPage));
             setData(response.data);
         });
     };
@@ -85,7 +89,7 @@ export default function Home() {
                                         ? "Magic Items"
                                         : chosenSection}
                                 </h1>
-                                <ul className="max-h-[85vh] overflow-y-scroll">
+                                <ul className="max-h-[85vh] overflow-y-scroll shadow-lg">
                                     {data.results.map((result, index) => {
                                         return (
                                             <div
@@ -97,9 +101,10 @@ export default function Home() {
                                         );
                                     })}
                                 </ul>
-                                <div className="mx-auto flex h-[8vh] w-[300px] items-center justify-between">
+                                <div className="mx-auto flex h-[7vh] items-center justify-between">
                                     {data.previous && (
                                         <button
+                                            className="bg-red-400 hover:bg-red-300 transition-colors p-2 flex-1"
                                             onClick={() => {
                                                 if (!data.previous) return;
                                                 fetchData(data.previous);
@@ -110,6 +115,7 @@ export default function Home() {
                                     )}
                                     {data.next && (
                                         <button
+                                            className="bg-orange-400 hover:bg-orange-300 transition-colors p-2 flex-1"
                                             onClick={() => {
                                                 if (!data.next) return;
                                                 fetchData(data.next);
@@ -122,7 +128,9 @@ export default function Home() {
                             </>
                         ) : (
                             <>
-                                <h1 className="text-5xl">Open5e Practice</h1>
+                                <h1 className="text-5xl mb-3">
+                                    Open5e Practice
+                                </h1>
                                 <h2 className="text-2xl">
                                     Click an item to begin...
                                 </h2>
