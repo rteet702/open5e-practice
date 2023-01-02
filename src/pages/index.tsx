@@ -26,8 +26,7 @@ export default function Home() {
     const [chosenSection, setChosenSection] = useState("");
     const [resultsPerPage, setResultsPerPage] = useState(20);
     const [data, setData] = useState<IApiResponse>();
-    const [selectedData, setSelectedData] = useState();
-    const [currentPage, setCurrentPage] = useState(1);
+    const [selected, setSelected] = useState<any>({});
     const [pages, setPages] = useState(0);
 
     const handleClick = (sectionName: string) => {
@@ -80,8 +79,8 @@ export default function Home() {
                     </ul>
                 </nav>
                 {/* Main Section */}
-                <main className={`${inter.className} p-3 flex-1`}>
-                    <section className="w-1/2">
+                <main className={`${inter.className} p-3 flex flex-1`}>
+                    <section className="flex-1">
                         {data ? (
                             <>
                                 <h1 className="text-5xl capitalize h-[7vh]">
@@ -94,7 +93,21 @@ export default function Home() {
                                         return (
                                             <div
                                                 key={index}
-                                                className="bg-neutral-100 p-5 border-t-2"
+                                                className={`cursor-pointer ${
+                                                    selected &&
+                                                    selected.name ===
+                                                        result.name
+                                                        ? "bg-orange-400" // selected
+                                                        : "bg-neutral-100 hover:bg-white" // not selected
+                                                } p-5 border-t-2 transition-colors`}
+                                                onClick={() =>
+                                                    setSelected((prev: any) => {
+                                                        return prev.name ===
+                                                            result.name
+                                                            ? {}
+                                                            : result;
+                                                    })
+                                                }
                                             >
                                                 {result.name}
                                             </div>
@@ -136,6 +149,13 @@ export default function Home() {
                                 </h2>
                             </>
                         )}
+                    </section>
+                    <section
+                        className={`${
+                            selected.name ? "flex-1" : "width-[0px]" // if selected, slide in
+                        } transition-all`}
+                    >
+                        <h2 className="text-5xl">{selected?.name}</h2>
                     </section>
                 </main>
             </div>
