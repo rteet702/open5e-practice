@@ -2,6 +2,7 @@ import Head from "next/head";
 import { Inter } from "@next/font/google";
 import { useState } from "react";
 import axios from "axios";
+import SelectedInfo from "../components/SelectedInfo";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -153,9 +154,9 @@ export default function Home() {
                     <section
                         className={`${
                             selected.name ? "flex-1" : "width-[0px]" // if selected, slide in
-                        } transition-all`}
+                        } transition-all duration-500`}
                     >
-                        <h2 className="text-5xl">{selected?.name}</h2>
+                        <SelectedInfo selection={selected} />
                     </section>
                 </main>
             </div>
